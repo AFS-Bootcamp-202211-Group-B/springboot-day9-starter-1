@@ -179,10 +179,10 @@ public class CompanyControllerTest {
         employees4.add(new Employee(new ObjectId().toString(), "eee", 20, "Male", 2000));
         employees4.add(new Employee(new ObjectId().toString(), "fff", 10, "Male", 8000));
 
-        Company company1 = companyRepository.create(new Company("Spring", employees1));
-        Company company2 = companyRepository.create(new Company("Boot", employees2));
-        Company company3 = companyRepository.create(new Company("TET", employees3));
-        Company company4 = companyRepository.create(new Company("POP", employees4));
+        Company company1 = companyMongoRepository.insert(new Company("Spring", employees1));
+        Company company2 = companyMongoRepository.insert(new Company("Boot", employees2));
+        Company company3 = companyMongoRepository.insert(new Company("TET", employees3));
+        Company company4 = companyMongoRepository.insert(new Company("POP", employees4));
 
         int page = 2;
         int pageSize = 2;
