@@ -96,7 +96,7 @@ public class CompanyServiceTest {
         Company company = new Company("Spring", employees);
         String id = company.getId();
 
-        given(companyRepository.findById(id)).willReturn(company);
+        given(companyMongoRepository.findById(id)).willReturn(Optional.of(company));
 
         // when
         Company actualCompany = companyService.findById(id);
