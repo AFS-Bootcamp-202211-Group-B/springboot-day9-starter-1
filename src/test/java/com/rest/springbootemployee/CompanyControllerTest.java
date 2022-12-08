@@ -153,7 +153,7 @@ public class CompanyControllerTest {
         employees.add(new Employee(String.valueOf(1), "lili", 20, "Female", 2000));
         employees.add(new Employee(String.valueOf(2), "coco", 10, "Female", 8000));
 
-        Company company = companyRepository.create(new Company("Spring", employees));
+        Company company = companyMongoRepository.save(new Company("Spring", employees));
 
         //when & then
         client.perform(MockMvcRequestBuilders.delete("/companies/{id}", company.getId()))
