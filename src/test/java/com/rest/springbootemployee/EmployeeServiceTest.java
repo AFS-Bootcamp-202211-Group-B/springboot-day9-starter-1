@@ -131,13 +131,13 @@ class EmployeeServiceTest {
     @Test
     void should_call_delete_with_specific_id_when_delete_given_an_id() {
         // given
-        Integer employeeId = 1;
+        String employeeId = "1";
 
         // when
         employeeService.delete(employeeId);
 
         // should
-        verify(employeeRepository).delete(employeeId);
+        verify(employeeMongoRepository).deleteById(employeeId);
     }
 
     @Test
