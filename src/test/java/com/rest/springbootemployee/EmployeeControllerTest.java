@@ -91,9 +91,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
     @Test
     void should_return_employees_when_perform_get_by_page_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?page={page}&pageSize={pageSize}", 1, 2)) // http status 200

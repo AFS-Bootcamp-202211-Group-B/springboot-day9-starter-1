@@ -3,7 +3,7 @@ package com.rest.springbootemployee.service;
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.exception.NoEmployeeFoundException;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.repository.EmployeeRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +11,9 @@ import java.util.List;
 @Service
 public class EmployeeService {// SUT
 
-    private EmployeeRepository employeeRepository; // DOC
-    private EmployeeMongoRepository employeeMongoRepository;
+    private final EmployeeMongoRepository employeeMongoRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMongoRepository employeeMongoRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(EmployeeMongoRepository employeeMongoRepository) {
         this.employeeMongoRepository = employeeMongoRepository;
     }
 
@@ -53,7 +51,7 @@ public class EmployeeService {// SUT
     }
 
     public List<Employee> findByPage(int page, int pageSize) {
-        return employeeRepository.findByPage(page, pageSize);
+        return employeeMongoRepository.findAll(PageRequest.of(page - 1, pageSize)).toList();
     }
 
     public void delete(String id) {
