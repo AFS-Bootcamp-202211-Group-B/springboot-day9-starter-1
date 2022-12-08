@@ -39,8 +39,8 @@ public class CompanyServiceTest {
         employees2.add(new Employee(String.valueOf(3), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(String.valueOf(4), "bbb", 10, "Male", 8000));
 
-        Company company1 = new Company(1,"Spring", employees1);
-        Company company2 = new Company(2,"Boot", employees2);
+        Company company1 = new Company("Spring", employees1);
+        Company company2 = new Company("Boot", employees2);
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
@@ -67,10 +67,10 @@ public class CompanyServiceTest {
         employees2.add(new Employee(String.valueOf(3), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(String.valueOf(4), "bbb", 10, "Male", 8000));
 
-        Company originalCompany = new Company(1,"Spring", employees1);
-        Company toUpdateCompany = new Company(2,companyName, employees2);
+        Company originalCompany = new Company("Spring", employees1);
+        Company toUpdateCompany = new Company(companyName, employees2);
 
-        int id = originalCompany.getId();
+        String id = originalCompany.getId();
         given(companyRepository.findById(id)).willReturn(originalCompany);
 
         //when
@@ -88,8 +88,8 @@ public class CompanyServiceTest {
         employees.add(new Employee(String.valueOf(1), "lili", 20, "Female", 2000));
         employees.add(new Employee(String.valueOf(2), "coco", 10, "Female", 8000));
 
-        Company company = new Company(1,"Spring", employees);
-        int id = company.getId();
+        Company company = new Company("Spring", employees);
+        String id = company.getId();
 
         given(companyRepository.findById(id)).willReturn(company);
 
@@ -107,9 +107,9 @@ public class CompanyServiceTest {
         employees.add(new Employee(String.valueOf(1), "lili", 20, "Female", 2000));
         employees.add(new Employee(String.valueOf(2), "coco", 10, "Female", 8000));
 
-        Company originalCompany = new Company(1,"Spring", employees);
+        Company originalCompany = new Company("Spring", employees);
 
-        Company createdCompany = new Company(15,"Spring", employees);
+        Company createdCompany = new Company("Spring", employees);
 
         given(companyRepository.create(originalCompany)).willReturn(createdCompany);
 
@@ -123,7 +123,7 @@ public class CompanyServiceTest {
     @Test
     public void should_delete_a_company_when_delete_given_a_id(){
         //given
-        Integer companyId = 1;
+        String companyId = "1";
 
         //when
         companyService.delete(companyId);
@@ -151,8 +151,8 @@ public class CompanyServiceTest {
         employees4.add(new Employee(String.valueOf(7), "aaa", 20, "Male", 2000));
         employees4.add(new Employee(String.valueOf(8), "bbb", 10, "Male", 8000));
 
-        Company company1 = companyRepository.create(new Company(1,"Spring", employees1));
-        Company company2 = companyRepository.create(new Company(2,"Boot", employees2));
+        Company company1 = companyRepository.create(new Company("Spring", employees1));
+        Company company2 = companyRepository.create(new Company("Boot", employees2));
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
@@ -176,8 +176,8 @@ public class CompanyServiceTest {
         Employee employee2 = new Employee(String.valueOf(2), "coco", 10, "Female", 8000);
         List<Employee> employees = new ArrayList<>(Arrays.asList(employee1, employee2));
 
-        Company company = new Company(1,"Spring", employees);
-        int id = company.getId();
+        Company company = new Company("Spring", employees);
+        String id = company.getId();
 
         given(companyRepository.findById(id)).willReturn(company);
 
