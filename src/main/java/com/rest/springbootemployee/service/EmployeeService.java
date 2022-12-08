@@ -1,6 +1,7 @@
 package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
 import com.rest.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,10 @@ import java.util.List;
 public class EmployeeService {// SUT
 
     private EmployeeRepository employeeRepository; // DOC
-
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    private EmployeeMongoRepository employeeMongoRepository;
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMongoRepository employeeMongoRepository) {
         this.employeeRepository = employeeRepository;
+        this.employeeMongoRepository = employeeMongoRepository;
     }
 
     // 1. verify interaction
@@ -20,7 +22,7 @@ public class EmployeeService {// SUT
     // 2. verify data
         // return the data get from employeeRepository.findAll() without any change.
     public List<Employee> findAll() {
-        return employeeRepository.findAll();
+        return employeeMongoRepository.findAll();
     }
 
     // 1. verify interaction
