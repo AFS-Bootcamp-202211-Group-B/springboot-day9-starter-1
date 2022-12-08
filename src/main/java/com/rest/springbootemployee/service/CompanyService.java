@@ -1,6 +1,7 @@
 package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Company;
+import com.rest.springbootemployee.exception.NoCompanyFoundException;
 import com.rest.springbootemployee.repository.CompanyMongoRepository;
 import com.rest.springbootemployee.repository.CompanyRepository;
 import com.rest.springbootemployee.entity.Employee;
@@ -40,10 +41,11 @@ public class CompanyService {
     }
 
     public Company update(String companyId, Company toUpdateCompany) {
-        Company existingCompany = companyRepository.findById(companyId);
+        Company existingCompany = companyMongoRepository.findById(companyId).orElseThrow(NoCompanyFoundException::new);
         if (toUpdateCompany.getName() != null) {
             existingCompany.setName(toUpdateCompany.getName());
         }
+        companyMongoRepository.save(existingCompany);
         return existingCompany;
     }
 
