@@ -2,7 +2,6 @@ package com.rest.springbootemployee;
 
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.repository.EmployeeRepository;
 import com.rest.springbootemployee.service.EmployeeService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -29,8 +28,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 public class EmployeeServiceTest {
 
-    @Mock
-    EmployeeRepository employeeRepository;
     @Mock
     EmployeeMongoRepository employeeMongoRepository;
 

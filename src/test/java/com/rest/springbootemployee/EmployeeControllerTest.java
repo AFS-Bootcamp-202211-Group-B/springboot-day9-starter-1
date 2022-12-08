@@ -3,7 +3,6 @@ package com.rest.springbootemployee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.repository.EmployeeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +28,10 @@ public class EmployeeControllerTest {
     MockMvc client;
 
     @Autowired
-    EmployeeRepository employeeRepository;
-    @Autowired
     EmployeeMongoRepository employeeMongoRepository;
 
     @BeforeEach
     void cleanRepository() {
-        employeeRepository.clearAll();
         employeeMongoRepository.deleteAll();
     }
 
