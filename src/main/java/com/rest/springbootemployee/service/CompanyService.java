@@ -51,7 +51,7 @@ public class CompanyService {
     }
 
     public List<Employee> getEmployees(String companyId) {
-        Company company = companyRepository.findById(companyId);
+        Company company = companyMongoRepository.findById(companyId).orElseThrow(NoCompanyFoundException::new);
         return company.getEmployees();
     }
 
