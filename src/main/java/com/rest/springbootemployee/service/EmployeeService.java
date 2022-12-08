@@ -1,6 +1,7 @@
 package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.exception.NoEmployeeFoundException;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
 import com.rest.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class EmployeeService {// SUT
     // 2. verify data
         // when input an employee, only the age and salary will be changed, name and gender will not change.
     public Employee update(String id, Employee employee) {
-        Employee existingEmployee = employeeMongoRepository.findById(id).get();
+        Employee existingEmployee = employeeMongoRepository.findById(id).orElseThrow(NoEmployeeFoundException::new);;
         if (employee.getAge() != null) {
             existingEmployee.setAge(employee.getAge());
         }
@@ -42,12 +43,13 @@ public class EmployeeService {// SUT
     }
 
 
-    public Employee findById(Integer id) {
-        return employeeRepository.findById(id);
+    public Employee findById(String id) {
+        return employeeMongoRepository.findById(id).orElseThrow(NoEmployeeFoundException::new);
     }
 
     public List<Employee> findByGender(String gender) {
-        return employeeRepository.findByGender(gender);
+//        return employeeMongoRepository.findAll().stream().filter(employee->employee.getGender().equals(gender));
+        return employeeMongoRepository.findByGender(gender);
     }
 
     public List<Employee> findByPage(int page, int pageSize) {

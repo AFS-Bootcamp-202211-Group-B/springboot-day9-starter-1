@@ -78,15 +78,15 @@ public class EmployeeServiceTest {
     @Test
     void should_return_employee_when_find_by_id_given_employee() {
         // given
-        Integer employeeId = 1;
-        Employee employee = new Employee(String.valueOf(1), "Susan", 22, "Female", 7000);
-        given(employeeRepository.findById(employeeId)).willReturn(employee);
+        String employeeId = "1";
+        Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
+        given(employeeMongoRepository.findById(employeeId)).willReturn(Optional.of(employee));
 
         // when
         Employee result = employeeService.findById(employeeId);
 
         // should
-        verify(employeeRepository).findById(employeeId);
+        verify(employeeMongoRepository).findById(employeeId);
         assertThat(result, equalTo(employee));
     }
 
@@ -94,18 +94,18 @@ public class EmployeeServiceTest {
     void should_return_employees_when_find_by_gender_given_employees() {
         // given
         List<Employee> employees = new ArrayList<>();
-        Employee employee1 = new Employee(String.valueOf(1), "Susan", 22, "Female", 7000);
-        Employee employee2 = new Employee(String.valueOf(2), "Lisa", 20, "Female", 7000);
-        Employee employee3 = new Employee(String.valueOf(3), "Jim", 21, "Male", 7000);
+        Employee employee1 = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
+        Employee employee2 = new Employee(new ObjectId().toString(), "Lisa", 20, "Female", 7000);
+        Employee employee3 = new Employee(new ObjectId().toString(), "Jim", 21, "Male", 7000);
 
         String gender = "Female";
-        given(employeeRepository.findByGender(gender)).willReturn(employees);
+        given(employeeMongoRepository.findByGender(gender)).willReturn(employees);
 
         // when
         List<Employee> result = employeeService.findByGender(gender);
 
         // should
-        verify(employeeRepository).findByGender(gender);
+        verify(employeeMongoRepository).findByGender(gender);
         assertThat(result, equalTo(employees));
     }
 

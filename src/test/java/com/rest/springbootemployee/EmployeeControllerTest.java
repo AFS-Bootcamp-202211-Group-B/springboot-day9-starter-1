@@ -59,11 +59,11 @@ public class EmployeeControllerTest {
     @Test
     void should_get_employee_by_id_when_perform_get_by_id_given_employees() throws Exception {
         //given
-        Employee susan = employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(String.valueOf(11), "Bob", 23, "Male", 9000));
+        Employee susan = employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Bob", 23, "Male", 9000));
 
         //when & then
-        client.perform(MockMvcRequestBuilders.get("/employees/{id}", Integer.parseInt(susan.getId())))
+        client.perform(MockMvcRequestBuilders.get("/employees/{id}", susan.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Susan"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(22))
@@ -74,9 +74,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_gender_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(String.valueOf(11), "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(String.valueOf(12), "Robert", 20, "Male", 8000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?gender={gender}", "Male")) // http status 200

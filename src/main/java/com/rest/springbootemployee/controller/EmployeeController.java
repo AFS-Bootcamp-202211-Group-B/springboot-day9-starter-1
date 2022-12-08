@@ -23,7 +23,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee getById(@PathVariable Integer id) {
+    public Employee getById(@PathVariable String id) {
         return employeeService.findById(id);
     }
 
