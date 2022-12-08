@@ -1,6 +1,7 @@
 package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.exception.NoEmployeeFoundException;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
 import com.rest.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -31,20 +32,21 @@ public class EmployeeService {// SUT
         // when EmployeeService.update is called, it will call employeeRepository.findById(id)
     // 2. verify data
         // when input an employee, only the age and salary will be changed, name and gender will not change.
-    public Employee update(Integer id, Employee employee) {
-        Employee existingEmployee = employeeRepository.findById(id);
+    public Employee update(String id, Employee employee) {
+        Employee existingEmployee = employeeMongoRepository.findById(id).orElseThrow(NoEmployeeFoundException::new);
         if (employee.getAge() != null) {
             existingEmployee.setAge(employee.getAge());
         }
         if (employee.getSalary() != null) {
             existingEmployee.setSalary(employee.getSalary());
         }
+        employeeMongoRepository.save(existingEmployee);
         return existingEmployee;
     }
 
 
-    public Employee findById(Integer id) {
-        return employeeRepository.findById(id);
+    public Employee findById(String id) {
+        return employeeMongoRepository.findById(id).orElseThrow(NoEmployeeFoundException::new);
     }
 
     public List<Employee> findByGender(String gender) {
@@ -55,11 +57,11 @@ public class EmployeeService {// SUT
         return employeeRepository.findByPage(page, pageSize);
     }
 
-    public void delete(Integer id) {
-        employeeRepository.delete(id);
+    public void delete(String id) {
+        employeeMongoRepository.deleteById(id);
     }
 
     public Employee create(Employee employee) {
-        return employeeRepository.create(employee);
+        return employeeMongoRepository.save(employee);
     }
 }

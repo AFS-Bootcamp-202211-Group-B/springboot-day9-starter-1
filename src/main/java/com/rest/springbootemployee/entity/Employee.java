@@ -20,6 +20,7 @@ public class Employee {
         this.gender = gender;
         this.salary = salary;
     }
+    public Employee(){}
 
     public String getId() {
         return id;

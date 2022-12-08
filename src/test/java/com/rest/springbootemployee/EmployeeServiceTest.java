@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -55,17 +56,18 @@ public class EmployeeServiceTest {
     @Test
     void should_update_only_age_and_salary_when_update_all_given_employees() {
         //given
-        int employeeId = 1;
+//        String employeeId = "1";
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
         Employee toUpdateEmployee = new Employee(new ObjectId().toString(), "Tom", 23, "Male", 12000);
-
-        when(employeeRepository.findById(employeeId)).thenReturn(employee);
+        String employeeId = employee.getId();
+        when(employeeMongoRepository.findById(employeeId)).thenReturn(Optional.of(employee));
 
         //when
+
         Employee updatedEmployee = employeeService.update(employeeId, toUpdateEmployee);
 
         //then
-        verify(employeeRepository).findById(employeeId);
+        verify(employeeMongoRepository).findById(employeeId);
         assertThat(updatedEmployee.getAge(), equalTo(23));
         assertThat(updatedEmployee.getSalary(), equalTo(12000));
         assertThat(updatedEmployee.getName(), equalTo("Susan"));
@@ -76,15 +78,15 @@ public class EmployeeServiceTest {
     @Test
     void should_return_employee_when_find_by_id_given_employee() {
         // given
-        Integer employeeId = 1;
+        String employeeId = "1";
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
-        given(employeeRepository.findById(employeeId)).willReturn(employee);
+        given(employeeMongoRepository.findById(employeeId)).willReturn(Optional.of(employee));
 
         // when
         Employee result = employeeService.findById(employeeId);
 
         // should
-        verify(employeeRepository).findById(employeeId);
+        verify(employeeMongoRepository).findById(employeeId);
         assertThat(result, equalTo(employee));
     }
 
@@ -129,13 +131,13 @@ public class EmployeeServiceTest {
     @Test
     void should_call_delete_with_specific_id_when_delete_given_an_id() {
         // given
-        Integer employeeId = 1;
+        String employeeId = "1";
 
         // when
         employeeService.delete(employeeId);
 
         // should
-        verify(employeeRepository).delete(employeeId);
+        verify(employeeMongoRepository).deleteById(employeeId);
     }
 
     @Test
@@ -144,13 +146,13 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
         Employee createdEmployee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
 
-        given(employeeRepository.create(employee)).willReturn(createdEmployee);
+        given(employeeMongoRepository.save(employee)).willReturn(createdEmployee);
 
         // when
         Employee result = employeeService.create(employee);
 
         // should
-        verify(employeeRepository).create(employee);
+        verify(employeeMongoRepository).save(employee);
         assertThat(result, equalTo(createdEmployee));
     }
 }
