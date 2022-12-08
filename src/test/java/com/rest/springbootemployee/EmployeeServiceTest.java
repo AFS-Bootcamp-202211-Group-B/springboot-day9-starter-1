@@ -1,16 +1,13 @@
 package com.rest.springbootemployee;
 
 import com.rest.springbootemployee.entity.Employee;
-import com.rest.springbootemployee.exception.NoEmployeeFoundException;
 import com.rest.springbootemployee.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.repository.EmployeeRepository;
 import com.rest.springbootemployee.service.EmployeeService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -31,8 +28,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class EmployeeServiceTest {
 
-    @Mock
-    EmployeeRepository employeeRepository;
     @Mock
     EmployeeMongoRepository employeeMongoRepository;
 
