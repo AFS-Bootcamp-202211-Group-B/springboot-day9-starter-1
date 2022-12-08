@@ -82,8 +82,8 @@ public class CompanyControllerTest {
         List<Employee> employees2 = new ArrayList<>();
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
-        Company company1 = companyRepository.create(new Company("Spring", employees1));
-        Company company2 = companyRepository.create(new Company("Boot", employees2));
+        Company company1 = companyMongoRepository.save(new Company("Spring", employees1));
+        Company company2 = companyMongoRepository.save(new Company("Boot", employees2));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies/{id}", company1.getId()))
