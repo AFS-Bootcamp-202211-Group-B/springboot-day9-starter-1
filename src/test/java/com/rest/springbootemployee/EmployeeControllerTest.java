@@ -59,12 +59,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
     @Test
     void should_get_employee_by_id_when_perform_get_by_id_given_employees() throws Exception {
         //given
-        Employee susan = employeeRepository.create(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Bob", 23, "Male", 9000));
+        Employee susan = employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Bob", 23, "Male", 9000));
 
         //when & then
         //        return id;
-        client.perform(MockMvcRequestBuilders.get("/employees/{id}", Integer.parseInt(susan.getId())))
+        client.perform(MockMvcRequestBuilders.get("/employees/{id}", susan.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Susan"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(22))
