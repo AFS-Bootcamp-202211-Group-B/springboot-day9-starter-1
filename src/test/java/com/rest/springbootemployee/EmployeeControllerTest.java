@@ -149,7 +149,7 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Male"));
 
         // then
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeMongoRepository.findAll();
         assertThat(employees, hasSize(1));
         assertThat(employees.get(0).getName(), equalTo("Jim"));
         assertThat(employees.get(0).getAge(), equalTo(20));
