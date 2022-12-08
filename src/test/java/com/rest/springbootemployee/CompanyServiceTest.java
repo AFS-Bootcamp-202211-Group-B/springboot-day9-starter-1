@@ -134,7 +134,7 @@ public class CompanyServiceTest {
         companyService.delete(companyId);
 
         //then
-        verify(companyRepository).delete(companyId);
+        verify(companyMongoRepository).deleteById(companyId);
     }
 
     @Test
