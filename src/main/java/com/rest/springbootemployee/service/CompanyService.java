@@ -40,11 +40,11 @@ public class CompanyService {
     }
 
     public Company update(String companyId, Company toUpdateCompany) {
-        Company existingCompany = companyRepository.findById(companyId);
+        Company existingCompany = companyMongoRepository.findById(companyId).orElseThrow(NoClassDefFoundError::new);
         if (toUpdateCompany.getName() != null) {
             existingCompany.setName(toUpdateCompany.getName());
         }
-        return existingCompany;
+        return companyMongoRepository.save(existingCompany);
     }
 
     public List<Employee> getEmployees(String companyId) {
