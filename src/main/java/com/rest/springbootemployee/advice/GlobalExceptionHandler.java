@@ -12,8 +12,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NoEmployeeFoundException.class, NoCompanyFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void method(Exception exception) {
-        return ;
+    public ErrorResponse method(Exception exception) {
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(),exception.getMessage());
     }
 
 
