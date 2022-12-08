@@ -117,14 +117,14 @@ public class CompanyServiceTest {
 
         Company createdCompany = new Company("Spring", employees);
 
-        given(companyRepository.create(originalCompany)).willReturn(createdCompany);
+        given(companyMongoRepository.save(originalCompany)).willReturn(createdCompany);
 
         // when
         Company actualCompany = companyService.create(originalCompany);
 
         // then
         assertThat(actualCompany, equalTo(createdCompany));
-        verify(companyRepository).create(originalCompany);
+        verify(companyMongoRepository).save(originalCompany);
     }
     @Test
     public void should_delete_a_company_when_delete_given_a_id(){
