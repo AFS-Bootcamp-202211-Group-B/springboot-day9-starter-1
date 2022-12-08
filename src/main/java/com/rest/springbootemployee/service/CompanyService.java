@@ -33,11 +33,11 @@ public class CompanyService {
     }
 
     public Company create(Company company) {
-        return companyRepository.create(company);
+        return companyMongoRepository.save(company);
     }
 
     public void delete(String companyId) {
-        companyRepository.delete(companyId);
+        companyMongoRepository.deleteById(companyId);
     }
 
     public Company update(String companyId, Company toUpdateCompany) {
