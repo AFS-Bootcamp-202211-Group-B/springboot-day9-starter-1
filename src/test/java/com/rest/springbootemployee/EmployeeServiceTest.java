@@ -1,6 +1,8 @@
 package com.rest.springbootemployee;
 
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.exception.NoEmployeeFoundException;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
 import com.rest.springbootemployee.repository.EmployeeRepository;
 import com.rest.springbootemployee.service.EmployeeService;
 import org.bson.types.ObjectId;
@@ -22,10 +24,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class EmployeeServiceTest {
+class EmployeeServiceTest {
 
     @Mock
     EmployeeRepository employeeRepository;
+    @Mock
+    EmployeeMongoRepository employeeMongoRepository;
 
     @InjectMocks
     EmployeeService employeeService;
@@ -37,7 +41,7 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
         employees.add(employee);
 
-        when(employeeRepository.findAll()).thenReturn(employees);
+        when(employeeMongoRepository.findAll()).thenReturn(employees);
 
         //when
         List<Employee> result = employeeService.findAll();
@@ -45,7 +49,7 @@ public class EmployeeServiceTest {
         //then
         assertThat(result, hasSize(1));
         assertThat(result.get(0), equalTo(employee));
-        verify(employeeRepository).findAll();
+        verify(employeeMongoRepository).findAll();
 
     }
 
