@@ -3,6 +3,7 @@ package com.rest.springbootemployee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.repository.CompanyMongoRepository;
 import com.rest.springbootemployee.repository.CompanyRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +31,13 @@ public class CompanyControllerTest {
 
     @Autowired
     CompanyRepository companyRepository;
+    @Autowired
+    CompanyMongoRepository companyMongoRepository;
 
     @BeforeEach
     public void clearDB() {
         companyRepository.clearAll();
+        companyMongoRepository.deleteAll();
     }
 
     @Test
@@ -46,8 +50,8 @@ public class CompanyControllerTest {
         List<Employee> employees2 = new ArrayList<>();
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
-        companyRepository.create(new Company(1, "Spring", employees1));
-        companyRepository.create(new Company(2, "Boot", employees2));
+        companyMongoRepository.save(new Company(1, "Spring", employees1));
+        companyMongoRepository.save(new Company(2, "Boot", employees2));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies"))
@@ -77,8 +81,8 @@ public class CompanyControllerTest {
         List<Employee> employees2 = new ArrayList<>();
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
-        Company company1 = companyRepository.create(new Company(1, "Spring", employees1));
-        Company company2 = companyRepository.create(new Company(2, "Boot", employees2));
+        Company company1 = companyMongoRepository.save(new Company(1, "Spring", employees1));
+        Company company2 = companyMongoRepository.save(new Company(2, "Boot", employees2));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies/{id}", company1.getId()))
