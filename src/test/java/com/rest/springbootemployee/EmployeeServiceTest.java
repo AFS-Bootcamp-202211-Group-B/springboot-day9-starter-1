@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -118,13 +121,14 @@ public class EmployeeServiceTest {
 
         int page = 1;
         int pageSize = 2;
-        given(employeeRepository.findByPage(1, 2)).willReturn(employees);
+        final PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        given(employeeMongoRepository.findAll(pageRequest)).willReturn(new PageImpl<>(employees));
 
         // when
         List<Employee> result = employeeService.findByPage(page, pageSize);
 
         // should
-        verify(employeeRepository).findByPage(page, pageSize);
+        verify(employeeMongoRepository).findAll(pageRequest);
         assertThat(result, equalTo(employees));
     }
 
