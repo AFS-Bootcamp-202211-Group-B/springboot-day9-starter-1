@@ -1,5 +1,10 @@
 package com.rest.springbootemployee;
 
+import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
+import com.rest.springbootemployee.repository.EmployeeRepository;
+import com.rest.springbootemployee.service.EmployeeService;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,13 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.twice;
 
 @ExtendWith(SpringExtension.class)
 public class EmployeeServiceTest {
 
     @Mock
     EmployeeRepository employeeRepository;
+    @Mock
+    EmployeeMongoRepository employeeMongoRepository;
 
     @InjectMocks
     EmployeeService employeeService;
@@ -31,10 +37,10 @@ public class EmployeeServiceTest {
     void should_return_all_employees_when_find_all_given_employees() {
         //given
         List<Employee> employees = new ArrayList<>();
-        Employee employee = new Employee(10, "Susan", 22, "Female", 10000);
+        Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
         employees.add(employee);
 
-        when(employeeRepository.findAll()).thenReturn(employees);
+        when(employeeMongoRepository.findAll()).thenReturn(employees);
 
         //when
         List<Employee> result = employeeService.findAll();
@@ -42,7 +48,7 @@ public class EmployeeServiceTest {
         //then
         assertThat(result, hasSize(1));
         assertThat(result.get(0), equalTo(employee));
-        verify(employeeRepository).findAll();
+        verify(employeeMongoRepository).findAll();
 
     }
 
@@ -50,8 +56,8 @@ public class EmployeeServiceTest {
     void should_update_only_age_and_salary_when_update_all_given_employees() {
         //given
         int employeeId = 1;
-        Employee employee = new Employee(employeeId, "Susan", 22, "Female", 10000);
-        Employee toUpdateEmployee = new Employee(employeeId, "Tom", 23, "Male", 12000);
+        Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
+        Employee toUpdateEmployee = new Employee(new ObjectId().toString(), "Tom", 23, "Male", 12000);
 
         when(employeeRepository.findById(employeeId)).thenReturn(employee);
 
@@ -71,7 +77,7 @@ public class EmployeeServiceTest {
     void should_return_employee_when_find_by_id_given_employee() {
         // given
         Integer employeeId = 1;
-        Employee employee = new Employee(1, "Susan", 22, "Female", 7000);
+        Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
         given(employeeRepository.findById(employeeId)).willReturn(employee);
 
         // when
@@ -86,9 +92,9 @@ public class EmployeeServiceTest {
     void should_return_employees_when_find_by_gender_given_employees() {
         // given
         List<Employee> employees = new ArrayList<>();
-        Employee employee1 = new Employee(1, "Susan", 22, "Female", 7000);
-        Employee employee2 = new Employee(2, "Lisa", 20, "Female", 7000);
-        Employee employee3 = new Employee(3, "Jim", 21, "Male", 7000);
+        Employee employee1 = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
+        Employee employee2 = new Employee(new ObjectId().toString(), "Lisa", 20, "Female", 7000);
+        Employee employee3 = new Employee(new ObjectId().toString(), "Jim", 21, "Male", 7000);
 
         String gender = "Female";
         given(employeeRepository.findByGender(gender)).willReturn(employees);
@@ -105,8 +111,8 @@ public class EmployeeServiceTest {
     void should_return_employees_when_find_by_page_given_employees() {
         // given
         List<Employee> employees = new ArrayList<>();
-        Employee employee1 = new Employee(1, "Susan", 22, "Female", 7000);
-        Employee employee2 = new Employee(2, "Lisa", 20, "Female", 7000);
+        Employee employee1 = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
+        Employee employee2 = new Employee(new ObjectId().toString(), "Lisa", 20, "Female", 7000);
 
         int page = 1;
         int pageSize = 2;
@@ -135,8 +141,8 @@ public class EmployeeServiceTest {
     @Test
     void should_call_create_with_specific_employee_when_create_given_an_employee() {
         // given
-        Employee employee = new Employee(1, "Susan", 22, "Female", 7000);
-        Employee createdEmployee = new Employee(10, "Susan", 22, "Female", 7000);
+        Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
+        Employee createdEmployee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
 
         given(employeeRepository.create(employee)).willReturn(createdEmployee);
 
