@@ -109,14 +109,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
     @Test
     void should_return_updated_employee_when_perform_put_given_employee() throws Exception {
         //given
-        Employee employee = employeeRepository.create(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        Employee employee = employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
         Employee updateEmployee = new Employee(new ObjectId().toString(), "Jim", 20, "Male", 55000);
 
         String updateEmployeeJson = new ObjectMapper().writeValueAsString(updateEmployee);
 
         //when
         //        return id;
-        client.perform(MockMvcRequestBuilders.put("/employees/{id}", Integer.parseInt(employee.getId()))
+        client.perform(MockMvcRequestBuilders.put("/employees/{id}", employee.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateEmployeeJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -126,7 +126,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Female"));
 
         // then
-        final Employee updatedEmployee = employeeRepository.findAll().get(0);
+        final Employee updatedEmployee = employeeMongoRepository.findAll().get(0);
         assertThat(updatedEmployee.getName(), equalTo("Susan"));
         assertThat(updatedEmployee.getAge(), equalTo(20));
         assertThat(updatedEmployee.getSalary(), equalTo(55000));
