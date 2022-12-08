@@ -74,9 +74,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_gender_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?gender={gender}", "Male")) // http status 200

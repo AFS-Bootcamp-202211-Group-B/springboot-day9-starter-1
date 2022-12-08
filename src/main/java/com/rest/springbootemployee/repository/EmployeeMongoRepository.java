@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface EmployeeMongoRepository extends MongoRepository<Employee, String> {
-//    List<Employee> findByGender(String gender);
+    List<Employee> findByGender(String gender);
 //    List<Employee> findByPage(int page, int pageSize);
 }

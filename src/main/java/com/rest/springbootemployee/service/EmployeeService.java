@@ -51,7 +51,7 @@ public class EmployeeService {// SUT
     }
 
     public List<Employee> findByGender(String gender) {
-        return employeeRepository.findByGender(gender);
+        return employeeMongoRepository.findByGender(gender);
     }
 
     public List<Employee> findByPage(int page, int pageSize) {
