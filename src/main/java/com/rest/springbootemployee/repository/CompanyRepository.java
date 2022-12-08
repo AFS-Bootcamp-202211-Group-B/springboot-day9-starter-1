@@ -18,17 +18,17 @@ public class CompanyRepository {
         ArrayList<Employee> employeesOfCompany1 = new ArrayList<>();
         employeesOfCompany1.add(new Employee(new ObjectId().toString(), "Carlos", 26, "Male", 70000));
         employeesOfCompany1.add(new Employee(new ObjectId().toString(), "Nicole", 22, "Female", 80000));
-        companies.add(new Company(100, "spring", employeesOfCompany1));
+        companies.add(new Company( "spring", employeesOfCompany1));
 
         ArrayList<Employee> employeesOfCompany2 = new ArrayList<>();
         employeesOfCompany2.add(new Employee(new ObjectId().toString(), "Alice", 21, "Female", 90000));
         employeesOfCompany2.add(new Employee(new ObjectId().toString(), "Bob", 20, "Male", 80000));
-        companies.add(new Company(101, "summer", employeesOfCompany2));
+        companies.add(new Company("summer", employeesOfCompany2));
 
         ArrayList<Employee> employeesOfCompany3 = new ArrayList<>();
         employeesOfCompany3.add(new Employee(new ObjectId().toString(), "Zoe", 23, "Female", 85000));
         employeesOfCompany3.add(new Employee(new ObjectId().toString(), "Thomas", 22, "Male", 83000));
-        companies.add(new Company(102, "autumn", employeesOfCompany3));
+        companies.add(new Company( "autumn", employeesOfCompany3));
     }
 
     public List<Company> findAll() {
@@ -42,38 +42,38 @@ public class CompanyRepository {
                 .collect(Collectors.toList());
     }
 
-    public Company findById(Integer id) {
+    public Company findById(String id) {
         return companies.stream()
                 .filter(company -> company.getId().equals(id))
                 .findFirst()
                 .orElseThrow(NoCompanyFoundException::new);
     }
 
-    public void delete(Integer id) {
+    public void delete(String id) {
         Company existingCompany = findById(id);
         companies.remove(existingCompany);
     }
 
-    public List<Employee> getEmployees(Integer id) {
+    public List<Employee> getEmployees(String id) {
         return findById(id).getEmployees();
     }
 
     public Company create(Company company) {
-        Integer nextId = generateNextId();
+        String nextId = generateNextId();
         company.setId(nextId);
         companies.add(company);
         return company;
     }
 
-    private Integer generateNextId() {
+    private String generateNextId() {
         int maxId = companies.stream()
-                .mapToInt(Company::getId)
+                .mapToInt(company -> Integer.parseInt(company.getId()))
                 .max()
                 .orElse(1);
-        return maxId + 1;
+        return String.valueOf(maxId + 1);
     }
 
-    public Company update(Integer id, Company company) {
+    public Company update(String id, Company company) {
         Company existingCompany = findById(id);
         if (company.getName() != null) {
             existingCompany.setName(company.getName());

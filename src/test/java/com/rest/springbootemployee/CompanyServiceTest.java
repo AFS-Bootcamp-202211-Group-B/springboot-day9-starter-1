@@ -71,7 +71,7 @@ public class CompanyServiceTest {
         Company originalCompany = new Company(1,"Spring", employees1);
         Company toUpdateCompany = new Company(2,companyName, employees2);
 
-        int id = originalCompany.getId();
+        String id = originalCompany.getId();
         given(companyRepository.findById(id)).willReturn(originalCompany);
 
         //when
@@ -90,7 +90,7 @@ public class CompanyServiceTest {
         employees.add(new Employee(new ObjectId().toString(), "coco", 10, "Female", 8000));
 
         Company company = new Company(1,"Spring", employees);
-        int id = company.getId();
+        String id = company.getId();
 
         given(companyRepository.findById(id)).willReturn(company);
 
@@ -124,7 +124,7 @@ public class CompanyServiceTest {
     @Test
     public void should_delete_a_company_when_delete_given_a_id(){
         //given
-        Integer companyId = 1;
+        String companyId = "1";
 
         //when
         companyService.delete(companyId);
@@ -178,7 +178,7 @@ public class CompanyServiceTest {
         List<Employee> employees = new ArrayList<>(Arrays.asList(employee1, employee2));
 
         Company company = new Company(1,"Spring", employees);
-        int id = company.getId();
+        String id = company.getId();
 
         given(companyRepository.findById(id)).willReturn(company);
 

@@ -83,7 +83,6 @@ public class CompanyControllerTest {
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies/{id}", company1.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Spring"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[*].name", containsInAnyOrder("lili", "coco")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[*].age", containsInAnyOrder(20, 10)))
@@ -104,7 +103,6 @@ public class CompanyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newCompanyJson))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("PPP"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].name").value("lili"))
@@ -225,7 +223,7 @@ public class CompanyControllerTest {
         Company company3 = companyRepository.create(new Company(3, "TET", employees3));
         Company company4 = companyRepository.create(new Company(4, "POP", employees4));
 
-        int id = company3.getId();
+        String id = company3.getId();
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies/{id}/employees", id))
