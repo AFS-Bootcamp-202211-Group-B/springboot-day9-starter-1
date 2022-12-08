@@ -32,8 +32,6 @@ import static org.mockito.Mockito.when;
 public class EmployeeServiceTest {
 
     @Mock
-    EmployeeRepository employeeRepository;
-    @Mock
     EmployeeMongoRepository employeeMongoRepository;
 
 

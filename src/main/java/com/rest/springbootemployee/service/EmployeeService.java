@@ -12,10 +12,9 @@ import java.util.List;
 @Service
 public class EmployeeService {// SUT
 
-    private EmployeeRepository employeeRepository; // DOC
+    // DOC
     private EmployeeMongoRepository employeeMongoRepository;
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMongoRepository employeeMongoRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(EmployeeMongoRepository employeeMongoRepository) {
         this.employeeMongoRepository = employeeMongoRepository;
     }
 
