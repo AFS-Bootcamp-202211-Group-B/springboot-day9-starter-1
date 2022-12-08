@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -154,20 +156,26 @@ public class CompanyServiceTest {
         employees4.add(new Employee(String.valueOf(7), "aaa", 20, "Male", 2000));
         employees4.add(new Employee(String.valueOf(8), "bbb", 10, "Male", 8000));
 
-        Company company1 = companyRepository.create(new Company("Spring", employees1));
-        Company company2 = companyRepository.create(new Company("Boot", employees2));
+        Company company1 = companyMongoRepository.save(new Company("Spring", employees1));
+        Company company2 = companyMongoRepository.save(new Company("Boot", employees2));
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
         int page = 2;
         int pageSize = 2;
 
-        given(companyRepository.findByPage(2, 2)).willReturn(companies);
+
+
+
+        // should
+
+        given(companyMongoRepository.findAll(PageRequest.of(page-1,pageSize))).willReturn(new PageImpl(companies));
 
         //when
         List<Company> actualCompanies = companyService.findByPage(page, pageSize);
 
         //then
+        verify(companyMongoRepository).findAll(PageRequest.of(page-1,pageSize));
         assertThat(actualCompanies, hasSize(2));
         assertThat(actualCompanies.get(0), equalTo(company1));
         assertThat(actualCompanies.get(1), equalTo(company2));

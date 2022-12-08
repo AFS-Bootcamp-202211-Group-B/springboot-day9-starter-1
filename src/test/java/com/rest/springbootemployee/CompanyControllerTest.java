@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class CompanyControllerTest {
     @BeforeEach
     public void clearDB() {
         companyRepository.clearAll();
+        companyMongoRepository.deleteAll();
     }
 
     @Test
@@ -177,16 +179,17 @@ public class CompanyControllerTest {
         employees4.add(new Employee(String.valueOf(7), "eee", 20, "Male", 2000));
         employees4.add(new Employee(String.valueOf(8), "fff", 10, "Male", 8000));
 
-        Company company1 = companyRepository.create(new Company("Spring", employees1));
-        Company company2 = companyRepository.create(new Company("Boot", employees2));
-        Company company3 = companyRepository.create(new Company("TET", employees3));
-        Company company4 = companyRepository.create(new Company("POP", employees4));
+        Company company1 = companyMongoRepository.save(new Company("Spring", employees1));
+        Company company2 = companyMongoRepository.save(new Company("Boot", employees2));
+        Company company3 = companyMongoRepository.save(new Company("TET", employees3));
+        Company company4 = companyMongoRepository.save(new Company("POP", employees4));
 
         int page = 2;
         int pageSize = 2;
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies?page={page}&pageSize={pageSize}", page, pageSize))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(company3.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("TET"))
