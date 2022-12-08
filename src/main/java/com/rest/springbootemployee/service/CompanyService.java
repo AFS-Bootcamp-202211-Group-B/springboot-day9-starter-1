@@ -28,7 +28,7 @@ public class CompanyService {
     }
 
     public Company findById(String companyId) {
-        return companyRepository.findById(companyId);
+        return companyMongoRepository.findById(companyId).orElseThrow(NoClassDefFoundError::new);
     }
 
     public Company create(Company company) {
