@@ -37,13 +37,13 @@ public class EmployeeControllerTest {
     @Test
     void should_get_all_employees_when_perform_get_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
+        employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Susan"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(22))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value("Female"))
@@ -53,11 +53,11 @@ public class EmployeeControllerTest {
     @Test
     void should_get_employee_by_id_when_perform_get_by_id_given_employees() throws Exception {
         //given
-        Employee susan = employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Bob", 23, "Male", 9000));
+        Employee susan = employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
+        employeeRepository.create(new Employee(String.valueOf(11), "Bob", 23, "Male", 9000));
 
         //when & then
-        client.perform(MockMvcRequestBuilders.get("/employees/{id}", susan.getId()))
+        client.perform(MockMvcRequestBuilders.get("/employees/{id}", Integer.parseInt(susan.getId())))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Susan"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(22))
@@ -68,9 +68,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_gender_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(12, "Robert", 20, "Male", 8000));
+        employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
+        employeeRepository.create(new Employee(String.valueOf(11), "Leo", 25, "Male", 9000));
+        employeeRepository.create(new Employee(String.valueOf(12), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?gender={gender}", "Male")) // http status 200
@@ -85,9 +85,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_page_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(12, "Robert", 20, "Male", 8000));
+        employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
+        employeeRepository.create(new Employee(String.valueOf(11), "Leo", 25, "Male", 9000));
+        employeeRepository.create(new Employee(String.valueOf(12), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?page={page}&pageSize={pageSize}", 1, 2)) // http status 200
@@ -102,13 +102,13 @@ public class EmployeeControllerTest {
     @Test
     void should_return_updated_employee_when_perform_put_given_employee() throws Exception {
         //given
-        Employee employee = employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        Employee updateEmployee = new Employee(10, "Jim", 20, "Male", 55000);
+        Employee employee = employeeRepository.create(new Employee(String.valueOf(10), "Susan", 22, "Female", 10000));
+        Employee updateEmployee = new Employee(String.valueOf(10), "Jim", 20, "Male", 55000);
 
         String updateEmployeeJson = new ObjectMapper().writeValueAsString(updateEmployee);
 
         //when
-        client.perform(MockMvcRequestBuilders.put("/employees/{id}", employee.getId())
+        client.perform(MockMvcRequestBuilders.put("/employees/{id}", Integer.parseInt(employee.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateEmployeeJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -129,7 +129,7 @@ public class EmployeeControllerTest {
     @Test
     void should_create_new_employee_when_perform_post_given_new_employee() throws Exception {
         //given
-        Employee newEmployee = new Employee(1, "Jim", 20, "Male", 55000);
+        Employee newEmployee = new Employee(String.valueOf(1), "Jim", 20, "Male", 55000);
         String newEmployeeJson = new ObjectMapper().writeValueAsString(newEmployee);
 
         //when
@@ -155,10 +155,10 @@ public class EmployeeControllerTest {
     @Test
     void should_return_204_when_perform_delete_given_employee() throws Exception {
         //given
-        Employee createdEmployee = employeeRepository.create(new Employee(1, "Jim", 20, "Male", 55000));
+        Employee createdEmployee = employeeRepository.create(new Employee(String.valueOf(1), "Jim", 20, "Male", 55000));
 
         //when
-        client.perform(MockMvcRequestBuilders.delete("/employees/{id}" , createdEmployee.getId()))
+        client.perform(MockMvcRequestBuilders.delete("/employees/{id}" , Integer.parseInt(createdEmployee.getId())))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         //then

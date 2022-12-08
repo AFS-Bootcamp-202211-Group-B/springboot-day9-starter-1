@@ -14,9 +14,9 @@ public class EmployeeRepository {
 
     public EmployeeRepository() {
         employees = new ArrayList<>();
-        employees.add(new Employee(1, "Lily", 20, "Female", 80000));
-        employees.add(new Employee(2, "Desiree", 20, "Female", 80000));
-        employees.add(new Employee(3, "Rafael", 20, "Male", 80000));
+        employees.add(new Employee(String.valueOf(1), "Lily", 20, "Female", 80000));
+        employees.add(new Employee(String.valueOf(2), "Desiree", 20, "Female", 80000));
+        employees.add(new Employee(String.valueOf(3), "Rafael", 20, "Male", 80000));
     }
 
     public List<Employee> findAll() {
@@ -25,7 +25,7 @@ public class EmployeeRepository {
 
     public Employee findById(Integer id) {
         return employees.stream()
-                .filter(employee -> employee.getId().equals(id))
+                .filter(employee -> ((Integer) Integer.parseInt(employee.getId())).equals(id))
                 .findFirst()
                 .orElseThrow(NoEmployeeFoundException::new);
     }
@@ -38,14 +38,14 @@ public class EmployeeRepository {
 
     public Employee create(Employee employee) {
         Integer nextId = generateNextId();
-        employee.setId(nextId);
+        employee.setId(String.valueOf(nextId));
         employees.add(employee);
         return employee;
     }
 
     private Integer generateNextId() {
         int maxId = employees.stream()
-                .mapToInt(employee -> employee.getId())
+                .mapToInt(employee -> Integer.parseInt(employee.getId()))
                 .max()
                 .orElse(1);
         return maxId + 1;
