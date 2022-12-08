@@ -3,7 +3,6 @@ package com.rest.springbootemployee;
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.repository.CompanyMongoRepository;
-import com.rest.springbootemployee.repository.CompanyRepository;
 import com.rest.springbootemployee.service.CompanyService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -27,8 +26,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
-    @Mock
-    CompanyRepository companyRepository;
     @Mock
     CompanyMongoRepository companyMongoRepository;
 
@@ -160,8 +157,8 @@ public class CompanyServiceTest {
         employees4.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees4.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
 
-        Company company1 = companyRepository.create(new Company("Spring", employees1));
-        Company company2 = companyRepository.create(new Company("Boot", employees2));
+        Company company1 = companyMongoRepository.insert(new Company("Spring", employees1));
+        Company company2 = companyMongoRepository.insert(new Company("Boot", employees2));
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
