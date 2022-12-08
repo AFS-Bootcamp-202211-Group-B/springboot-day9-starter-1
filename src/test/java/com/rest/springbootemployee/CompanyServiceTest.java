@@ -76,13 +76,15 @@ public class CompanyServiceTest {
         Company toUpdateCompany = new Company(companyName, employees2);
 
         String id = originalCompany.getId();
-        given(companyRepository.findById(id)).willReturn(originalCompany);
+        given(companyMongoRepository.findById(id)).willReturn(Optional.of(originalCompany));
+        given(companyMongoRepository.save(originalCompany)).willReturn(toUpdateCompany);
 
         //when
         Company actualCompany = companyService.update(id, toUpdateCompany);
 
         //then
-        verify(companyRepository).findById(id);
+        verify(companyMongoRepository).findById(id);
+        verify(companyMongoRepository).save(originalCompany);
         assertThat(actualCompany.getName(), equalTo(companyName));
     }
 
