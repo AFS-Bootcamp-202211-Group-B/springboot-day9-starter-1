@@ -3,6 +3,7 @@ package com.rest.springbootemployee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.repository.CompanyMongoRepository;
 import com.rest.springbootemployee.repository.CompanyRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,11 +30,15 @@ public class CompanyControllerTest {
     MockMvc client;
 
     @Autowired
+    CompanyMongoRepository companyMongoRepository;
+
+    @Autowired
     CompanyRepository companyRepository;
 
     @BeforeEach
     public void clearDB() {
         companyRepository.clearAll();
+        companyMongoRepository.deleteAll();
     }
 
     @Test
@@ -46,8 +51,8 @@ public class CompanyControllerTest {
         List<Employee> employees2 = new ArrayList<>();
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
-        companyRepository.create(new Company("Spring", employees1));
-        companyRepository.create(new Company("Boot", employees2));
+        companyMongoRepository.save(new Company("Spring", employees1));
+        companyMongoRepository.save(new Company("Boot", employees2));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/companies"))
