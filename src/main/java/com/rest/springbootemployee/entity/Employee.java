@@ -1,13 +1,19 @@
-package com.rest.springbootemployee;
+package com.rest.springbootemployee.entity;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+@Document
 public class Employee {
-    private Integer id;
+    @MongoId(FieldType.OBJECT_ID)
+    private String id;
     private String name;
     private Integer age;
     private String gender;
     private Integer salary;
 
-    public Employee(Integer id, String name, Integer age, String gender, Integer salary) {
+    public Employee(String id, String name, Integer age, String gender, Integer salary) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -15,11 +21,11 @@ public class Employee {
         this.salary = salary;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

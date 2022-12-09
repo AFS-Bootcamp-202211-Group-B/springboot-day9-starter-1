@@ -1,23 +1,22 @@
-package com.rest.springbootemployee;
+package com.rest.springbootemployee.entity;
 
 import java.util.List;
 
 public class Company {
-    private Integer id;
+    private String id;
     private String name;
     private List<Employee> employees;
 
-    public Company(Integer id, String name, List<Employee> employees) {
-        this.id = id;
+    public Company(String name, List<Employee> employees) {
         this.name = name;
         this.employees = employees;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

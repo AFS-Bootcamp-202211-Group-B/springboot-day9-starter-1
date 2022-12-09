@@ -1,6 +1,9 @@
 package com.rest.springbootemployee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +23,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EmployeeControllerTest {
+ class EmployeeControllerTest {
     @Autowired
     MockMvc client;
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    EmployeeMongoRepository employeeMongoRepository;
 
     @BeforeEach
     void cleanRepository() {
-        employeeRepository.clearAll();
+        employeeMongoRepository.deleteAll();
+
     }
 
     @Test
     void should_get_all_employees_when_perform_get_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
+        employeeMongoRepository.save(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Susan"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(22))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value("Female"))
@@ -51,10 +55,11 @@ public class EmployeeControllerTest {
     @Test
     void should_get_employee_by_id_when_perform_get_by_id_given_employees() throws Exception {
         //given
-        Employee susan = employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Bob", 23, "Male", 9000));
+        Employee susan = employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Bob", 23, "Male", 9000));
 
         //when & then
+        //        return id;
         client.perform(MockMvcRequestBuilders.get("/employees/{id}", susan.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Susan"))
@@ -66,10 +71,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_gender_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(12, "Robert", 20, "Male", 8000));
-
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?gender={gender}", "Male")) // http status 200
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -83,9 +87,9 @@ public class EmployeeControllerTest {
     @Test
     void should_return_employees_when_perform_get_by_page_given_employees() throws Exception {
         //given
-        employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        employeeRepository.create(new Employee(11, "Leo", 25, "Male", 9000));
-        employeeRepository.create(new Employee(12, "Robert", 20, "Male", 8000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Leo", 25, "Male", 9000));
+        employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Robert", 20, "Male", 8000));
 
         //when & then
         client.perform(MockMvcRequestBuilders.get("/employees?page={page}&pageSize={pageSize}", 1, 2)) // http status 200
@@ -100,12 +104,13 @@ public class EmployeeControllerTest {
     @Test
     void should_return_updated_employee_when_perform_put_given_employee() throws Exception {
         //given
-        Employee employee = employeeRepository.create(new Employee(10, "Susan", 22, "Female", 10000));
-        Employee updateEmployee = new Employee(10, "Jim", 20, "Male", 55000);
+        Employee employee = employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000));
+        Employee updateEmployee = new Employee(new ObjectId().toString(), "Jim", 20, "Male", 55000);
 
         String updateEmployeeJson = new ObjectMapper().writeValueAsString(updateEmployee);
 
         //when
+        //        return id;
         client.perform(MockMvcRequestBuilders.put("/employees/{id}", employee.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateEmployeeJson))
@@ -116,7 +121,7 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Female"));
 
         // then
-        final Employee updatedEmployee = employeeRepository.findAll().get(0);
+        final Employee updatedEmployee = employeeMongoRepository.findAll().get(0);
         assertThat(updatedEmployee.getName(), equalTo("Susan"));
         assertThat(updatedEmployee.getAge(), equalTo(20));
         assertThat(updatedEmployee.getSalary(), equalTo(55000));
@@ -127,7 +132,7 @@ public class EmployeeControllerTest {
     @Test
     void should_create_new_employee_when_perform_post_given_new_employee() throws Exception {
         //given
-        Employee newEmployee = new Employee(1, "Jim", 20, "Male", 55000);
+        Employee newEmployee = new Employee(new ObjectId().toString(), "Jim", 20, "Male", 55000);
         String newEmployeeJson = new ObjectMapper().writeValueAsString(newEmployee);
 
         //when
@@ -141,7 +146,7 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Male"));
 
         // then
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeMongoRepository.findAll();
         assertThat(employees, hasSize(1));
         assertThat(employees.get(0).getName(), equalTo("Jim"));
         assertThat(employees.get(0).getAge(), equalTo(20));
@@ -153,14 +158,15 @@ public class EmployeeControllerTest {
     @Test
     void should_return_204_when_perform_delete_given_employee() throws Exception {
         //given
-        Employee createdEmployee = employeeRepository.create(new Employee(1, "Jim", 20, "Male", 55000));
+        Employee createdEmployee = employeeMongoRepository.insert(new Employee(new ObjectId().toString(), "Jim", 20, "Male", 55000));
 
         //when
+        //        return id;
         client.perform(MockMvcRequestBuilders.delete("/employees/{id}" , createdEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         //then
-        assertThat(employeeRepository.findAll(), empty());
+        assertThat(employeeMongoRepository.findAll(), empty());
     }
 
 
