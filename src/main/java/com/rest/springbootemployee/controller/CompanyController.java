@@ -1,5 +1,8 @@
-package com.rest.springbootemployee;
+package com.rest.springbootemployee.controller;
 
+import com.rest.springbootemployee.entity.Company;
+import com.rest.springbootemployee.service.CompanyService;
+import com.rest.springbootemployee.entity.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +23,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public Company getById(@PathVariable Integer id) {
+    public Company getById(@PathVariable String id) {
         return companyService.findById(id);
     }
 
     @GetMapping("/{id}/employees")
-    public List<Employee> getEmployees(@PathVariable Integer id) {
+    public List<Employee> getEmployees(@PathVariable String id) {
         return companyService.getEmployees(id);
     }
 
@@ -41,13 +44,13 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public Company update(@PathVariable Integer id, @RequestBody Company company) {
+    public Company update(@PathVariable String id, @RequestBody Company company) {
         return companyService.update(id, company);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompany(@PathVariable Integer id) {
+    public void deleteCompany(@PathVariable String id) {
         companyService.delete(id);
     }
 }
