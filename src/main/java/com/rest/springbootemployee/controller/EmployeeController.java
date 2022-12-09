@@ -1,5 +1,8 @@
-package com.rest.springbootemployee;
+package com.rest.springbootemployee.controller;
 
+import com.rest.springbootemployee.entity.Employee;
+import com.rest.springbootemployee.exception.NoEmployeeFoundException;
+import com.rest.springbootemployee.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +24,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee getById(@PathVariable Integer id) {
+    public Employee getById(@PathVariable String id) {
         return employeeService.findById(id);
     }
 
@@ -36,13 +39,13 @@ public class EmployeeController {
         return employeeService.create(employee);
     }
     @PutMapping("/{id}")
-    public Employee update(@PathVariable Integer id, @RequestBody Employee employee) {
+    public Employee update(@PathVariable String id, @RequestBody Employee employee) {
         return employeeService.update(id, employee);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable String id) {
         employeeService.delete(id);
     }
 
